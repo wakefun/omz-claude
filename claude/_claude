@@ -1,0 +1,85 @@
+#compdef claude
+
+_claude() {
+  setopt local_options extended_glob
+  local curcontext="$curcontext" state line
+  typeset -A opt_args
+
+  _arguments -s -C \
+    '(-h --help)'{-h,--help}'[Display help]' \
+    '(-v --version)'{-v,--version}'[Output version]' \
+    '(-d --debug)'{-d,--debug}'[Enable debug mode]:filter:' \
+    '--verbose[Override verbose mode]' \
+    '(-p --print)'{-p,--print}'[Print response and exit]' \
+    '--output-format[Output format]:format:(text json stream-json)' \
+    '--json-schema[JSON Schema]:schema:' \
+    '--include-partial-messages[Include partial message chunks]' \
+    '--input-format[Input format]:format:(text stream-json)' \
+    '--mcp-debug[DEPRECATED]' \
+    '--dangerously-skip-permissions[Bypass all permission checks]' \
+    '--allow-dangerously-skip-permissions[Enable bypassing permission checks]' \
+    '--replay-user-messages[Re-emit user messages]' \
+    '--allowedTools[Allowed tools]:tools:' \
+    '--allowed-tools[Allowed tools]:tools:' \
+    '--tools[Available tools]:tools:' \
+    '--disallowedTools[Denied tools]:tools:' \
+    '--disallowed-tools[Denied tools]:tools:' \
+    '--mcp-config[MCP config files]:config:_files -g "*.json"' \
+    '--system-prompt[System prompt]:prompt:' \
+    '--append-system-prompt[Append system prompt]:prompt:' \
+    '--permission-mode[Permission mode]:mode:(acceptEdits bypassPermissions default dontAsk plan)' \
+    '(-c --continue)'{-c,--continue}'[Continue most recent conversation]' \
+    '(-r --resume)'{-r,--resume}'[Resume conversation]:session:' \
+    '--fork-session[Create new session ID when resuming]' \
+    '--no-session-persistence[Disable session persistence]' \
+    '--model[Model]:model:' \
+    '--agent[Agent]:agent:' \
+    '--betas[Beta headers]:betas:' \
+    '--fallback-model[Fallback model]:model:' \
+    '--settings[Settings file]:settings:->settings' \
+    '--add-dir[Additional directories]:dir:_files -/' \
+    '--ide[Connect to IDE on startup]' \
+    '--strict-mcp-config[Only use MCP from --mcp-config]' \
+    '--session-id[Session ID]:uuid:' \
+    '--agents[Custom agents JSON]:json:' \
+    '--setting-sources[Setting sources]:sources:' \
+    '--plugin-dir[Plugin directories]:dir:_files -/' \
+    '--disable-slash-commands[Disable slash commands]' \
+    '*: :->args'
+
+  case $state in
+    settings)
+      local -a names descs
+      local f base
+      for f in ~/.claude/settings.*.json(N); do
+        base=${f:t}; base=${base#settings.}; base=${base%.json}
+        names+=("$base")
+        descs+=("settings >> $base")
+      done
+      (( $#names )) && compadd -V settings -X 'settings file' -d descs -P '~/.claude/settings.' -S '.json ' -a names
+      ;;
+    args)
+      local -a commands shortcuts descs
+      commands=(
+        'mcp:Configure and manage MCP servers'
+        'plugin:Manage Claude Code plugins'
+        'setup-token:Set up authentication token'
+        'doctor:Check auto-updater health'
+        'update:Check for updates'
+        'install:Install Claude Code native build'
+      )
+
+      local f base
+      for f in ~/.claude/settings.*.json(N); do
+        base=${f:t}; base=${base#settings.}; base=${base%.json}
+        shortcuts+=("${base}")
+        descs+=("settings >> $base")
+      done
+
+      _describe 'command' commands
+      (( $#shortcuts )) && compadd -V shortcuts -X 'settings shortcut' -d descs -P '--settings ~/.claude/settings.' -S '.json' -a shortcuts
+      ;;
+  esac
+}
+
+_claude "$@"
