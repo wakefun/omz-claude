@@ -49,20 +49,36 @@ claude up<TAB>          # 补全到 'update'
 ### 配置文件补全
 
 ```sh
-claude --settings <TAB>   # 列出 ~/.claude/settings.*.json 中的所有配置文件
+claude --settings <TAB>   # 列出所有配置文件
 claude --settings k<TAB>  # 补全到 ~/.claude/settings.kimi.json
 ```
 
-### 快捷模式
+### 快捷模式（推荐）
 
-直接输入配置名，无需 `--settings`：
+直接输入配置名，无需 `--settings`，快速切换不同的 Claude 配置：
 
 ```sh
 claude k<TAB>    # 展开为: claude --settings ~/.claude/settings.kimi.json
 claude oa<TAB>   # 展开为: claude --settings ~/.claude/settings.oaipro.json
 ```
 
-快捷模式通过匹配 `~/.claude/` 目录下 `settings.*.json` 文件名的中间部分实现。
+## 配置文件规范
+
+插件会自动扫描 `~/.claude/` 目录下符合命名规则的配置文件：
+
+```text
+路径: ~/.claude/settings.<配置名>.json
+```
+
+示例：
+
+| 文件名 | 配置名 | 快捷输入 |
+|--------|--------|----------|
+| `settings.kimi.json` | kimi | `claude k<TAB>` |
+| `settings.oaipro.json` | oaipro | `claude oa<TAB>` |
+| `settings.deepseek.json` | deepseek | `claude d<TAB>` |
+
+创建新配置后，无需重启终端，补全列表会自动更新。
 
 ## 文件结构
 

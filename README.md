@@ -51,20 +51,36 @@ claude up<TAB>          # Complete to 'update'
 ### Settings File Completion
 
 ```sh
-claude --settings <TAB>   # List all settings files from ~/.claude/settings.*.json
+claude --settings <TAB>   # List all settings files
 claude --settings k<TAB>  # Complete to ~/.claude/settings.kimi.json
 ```
 
-### Shortcut Mode
+### Shortcut Mode (Recommended)
 
-Type the config name directly without `--settings`:
+Type the config name directly without `--settings` to quickly switch between Claude configurations:
 
 ```sh
 claude k<TAB>    # Expands to: claude --settings ~/.claude/settings.kimi.json
 claude oa<TAB>   # Expands to: claude --settings ~/.claude/settings.oaipro.json
 ```
 
-This works by matching against the middle part of `settings.*.json` filenames in `~/.claude/`.
+## Settings File Convention
+
+The plugin automatically scans `~/.claude/` for settings files matching this pattern:
+
+```text
+Path: ~/.claude/settings.<config-name>.json
+```
+
+Examples:
+
+| Filename | Config Name | Shortcut |
+|----------|-------------|----------|
+| `settings.kimi.json` | kimi | `claude k<TAB>` |
+| `settings.oaipro.json` | oaipro | `claude oa<TAB>` |
+| `settings.deepseek.json` | deepseek | `claude d<TAB>` |
+
+New configurations are detected automatically without restarting the terminal.
 
 ## File Structure
 
