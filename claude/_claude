@@ -76,8 +76,8 @@ _claude() {
         descs+=("settings >> $base")
       done
 
-      _describe 'command' commands
       (( $#shortcuts )) && compadd -V shortcuts -X 'settings shortcut' -d descs -P '--settings ~/.claude/settings.' -S '.json' -a shortcuts
+      _describe 'command' commands
       ;;
   esac
 }
