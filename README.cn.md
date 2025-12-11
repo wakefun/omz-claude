@@ -1,6 +1,6 @@
 # omz-claude
 
-一个为 [Claude Code](https://claude.ai/claude-code) CLI 提供 tab 补全功能的 oh-my-zsh 插件。
+一个为 [Claude Code](https://code.claude.com) CLI 提供 tab 补全功能的 oh-my-zsh 插件。
 
 ## 功能特性
 
@@ -12,7 +12,7 @@
 ## 环境要求
 
 - [oh-my-zsh](https://ohmyz.sh/)
-- [Claude Code CLI](https://claude.ai/claude-code)
+- [Claude Code CLI](https://code.claude.com)
 
 ## 安装
 

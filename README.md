@@ -1,6 +1,8 @@
 # omz-claude
 
-An oh-my-zsh plugin providing tab completion for the [Claude Code](https://claude.ai/claude-code) CLI.
+An oh-my-zsh plugin providing tab completion for the [Claude Code](https://code.claude.com) CLI.
+
+## [说明文档](README.cn.md)
 
 ## Features
 
@@ -12,7 +14,7 @@ An oh-my-zsh plugin providing tab completion for the [Claude Code](https://claud
 ## Requirements
 
 - [oh-my-zsh](https://ohmyz.sh/)
-- [Claude Code CLI](https://claude.ai/claude-code)
+- [Claude Code CLI](https://code.claude.com)
 
 ## Installation
 
