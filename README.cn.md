@@ -16,28 +16,29 @@
 
 ## 安装
 
-1. 克隆或下载本仓库：
+### 一键安装
 
 ```sh
-git clone https://github.com/your-username/omz-claude.git
+curl -fsSL https://raw.githubusercontent.com/wakefun/omz-claude/main/install.sh | bash
 ```
 
-2. 将 `claude` 目录复制到 oh-my-zsh 自定义插件目录：
-
-```sh
-cp -r omz-claude/claude ~/.oh-my-zsh/custom/plugins/
-```
-
-3. 在 `~/.zshrc` 中添加 `claude` 到插件列表：
+然后在 `~/.zshrc` 中添加 `claude` 到插件列表：
 
 ```sh
 plugins=(... claude)
 ```
 
-4. 重新加载 shell：
+重新加载 shell：
 
 ```sh
 source ~/.zshrc
+```
+
+### 手动安装
+
+```sh
+git clone https://github.com/wakefun/omz-claude.git
+cp -r omz-claude/claude ~/.oh-my-zsh/custom/plugins/
 ```
 
 ## 使用方法

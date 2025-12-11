@@ -16,28 +16,29 @@ An oh-my-zsh plugin providing tab completion for the [Claude Code](https://claud
 
 ## Installation
 
-1. Clone or download this repository:
+### One-line Install
 
 ```sh
-git clone https://github.com/your-username/omz-claude.git
+curl -fsSL https://raw.githubusercontent.com/wakefun/omz-claude/main/install.sh | bash
 ```
 
-2. Copy the `claude` directory to your oh-my-zsh custom plugins:
-
-```sh
-cp -r omz-claude/claude ~/.oh-my-zsh/custom/plugins/
-```
-
-3. Add `claude` to your plugins list in `~/.zshrc`:
+Then add `claude` to your plugins in `~/.zshrc`:
 
 ```sh
 plugins=(... claude)
 ```
 
-4. Reload your shell:
+Reload your shell:
 
 ```sh
 source ~/.zshrc
+```
+
+### Manual Install
+
+```sh
+git clone https://github.com/wakefun/omz-claude.git
+cp -r omz-claude/claude ~/.oh-my-zsh/custom/plugins/
 ```
 
 ## Usage
