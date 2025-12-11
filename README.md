@@ -19,19 +19,7 @@ An oh-my-zsh plugin providing tab completion for the [Claude Code](https://claud
 ### One-line Install
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/wakefun/omz-claude/main/install.sh | bash
-```
-
-Then add `claude` to your plugins in `~/.zshrc`:
-
-```sh
-plugins=(... claude)
-```
-
-Reload your shell:
-
-```sh
-source ~/.zshrc
+curl -fsSL https://raw.githubusercontent.com/wakefun/omz-claude/main/install.sh | bash && source ~/.zshrc
 ```
 
 ### Manual Install

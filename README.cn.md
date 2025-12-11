@@ -19,19 +19,7 @@
 ### 一键安装
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/wakefun/omz-claude/main/install.sh | bash
-```
-
-然后在 `~/.zshrc` 中添加 `claude` 到插件列表：
-
-```sh
-plugins=(... claude)
-```
-
-重新加载 shell：
-
-```sh
-source ~/.zshrc
+curl -fsSL https://raw.githubusercontent.com/wakefun/omz-claude/main/install.sh | bash && source ~/.zshrc
 ```
 
 ### 手动安装
