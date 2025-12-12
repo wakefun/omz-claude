@@ -4,6 +4,22 @@ _claude() {
   setopt local_options extended_glob
   local curcontext="$curcontext" state line
   typeset -A opt_args
+  local -a settings_names settings_shortcuts settings_descs
+  local settings_loaded=0
+
+  _claude_load_settings() {
+    local f base
+    settings_names=()
+    settings_shortcuts=()
+    settings_descs=()
+    for f in ~/.claude/settings.*.json(N); do
+      base=${f:t}; base=${base#settings.}; base=${base%.json}
+      settings_names+=("$base")
+      settings_shortcuts+=("$base")
+      settings_descs+=("settings >> $base")
+    done
+    settings_loaded=1
+  }
 
   _arguments -s -C \
     '(-h --help)'{-h,--help}'[Display help]' \
@@ -37,6 +53,7 @@ _claude() {
     '--betas[Beta headers]:betas:' \
     '--fallback-model[Fallback model]:model:' \
     '--settings[Settings file]:settings:->settings' \
+    '--settings=[Settings file]:settings:->settings' \
     '--add-dir[Additional directories]:dir:_files -/' \
     '--ide[Connect to IDE on startup]' \
     '--strict-mcp-config[Only use MCP from --mcp-config]' \
@@ -49,17 +66,33 @@ _claude() {
 
   case $state in
     settings)
-      local -a names descs
-      local f base
-      for f in ~/.claude/settings.*.json(N); do
-        base=${f:t}; base=${base#settings.}; base=${base%.json}
-        names+=("$base")
-        descs+=("settings >> $base")
-      done
-      (( $#names )) && compadd -V settings -X 'settings file' -d descs -P '~/.claude/settings.' -S '.json ' -a names
+      (( settings_loaded )) || _claude_load_settings
+      local curword needle
+      local -a matched_names matched_descs
+      local i
+
+      curword=${words[CURRENT]}
+      needle=${curword##*/}
+      needle=${needle#settings.}
+      needle=${needle%.json}
+
+      if [[ -n $needle ]]; then
+        for (( i = 1; i <= ${#settings_names}; i++ )); do
+          local cand_prefix=${settings_names[i]:0:${#needle}}
+          if [[ ${(L)cand_prefix} == ${(L)needle} ]]; then
+            matched_names+=("${settings_names[i]}")
+            matched_descs+=("${settings_descs[i]}")
+          fi
+        done
+      else
+        matched_names=("${settings_names[@]}")
+        matched_descs=("${settings_descs[@]}")
+      fi
+
+      (( $#matched_names )) && compadd -V settings -X 'settings file' -d matched_descs -P '~/.claude/settings.' -S '.json ' -a matched_names
       ;;
     args)
-      local -a commands shortcuts descs
+      local -a commands
       commands=(
         'mcp:Configure and manage MCP servers'
         'plugin:Manage Claude Code plugins'
@@ -69,15 +102,42 @@ _claude() {
         'install:Install Claude Code native build'
       )
 
-      local f base
-      for f in ~/.claude/settings.*.json(N); do
-        base=${f:t}; base=${base#settings.}; base=${base%.json}
-        shortcuts+=("${base}")
-        descs+=("settings >> $base")
-      done
+      (( settings_loaded )) || _claude_load_settings
+      local curword needle
+      local -a matched_shortcuts matched_descs matched_commands
+      local i entry name
 
-      (( $#shortcuts )) && compadd -V shortcuts -X 'settings shortcut' -d descs -P '--settings ~/.claude/settings.' -S '.json' -a shortcuts
-      _describe 'command' commands
+      curword=${words[CURRENT]}
+      needle=$curword
+
+      if [[ -n $needle ]]; then
+        for (( i = 1; i <= ${#settings_shortcuts}; i++ )); do
+          local cand_prefix=${settings_shortcuts[i]:0:${#needle}}
+          if [[ ${(L)cand_prefix} == ${(L)needle} ]]; then
+            matched_shortcuts+=("${settings_shortcuts[i]}")
+            matched_descs+=("${settings_descs[i]}")
+          fi
+        done
+      else
+        matched_shortcuts=("${settings_shortcuts[@]}")
+        matched_descs=("${settings_descs[@]}")
+      fi
+
+      (( $#matched_shortcuts )) && compadd -V shortcuts -X 'settings shortcut' -d matched_descs -P '--settings ~/.claude/settings.' -S '.json ' -a matched_shortcuts
+
+      if [[ -n $needle ]]; then
+        for entry in "${commands[@]}"; do
+          name=${entry%%:*}
+          local name_prefix=${name:0:${#needle}}
+          if [[ ${(L)name_prefix} == ${(L)needle} ]]; then
+            matched_commands+=("$entry")
+          fi
+        done
+      else
+        matched_commands=("${commands[@]}")
+      fi
+
+      _describe 'command' matched_commands
       ;;
   esac
 }

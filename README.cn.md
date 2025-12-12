@@ -22,6 +22,9 @@
 curl -fsSL https://raw.githubusercontent.com/wakefun/omz-claude/main/install.sh | bash && source ~/.zshrc
 ```
 
+安装脚本会尝试在 `~/.zshrc` 的 `plugins=(...)` 行中自动添加 `claude`，并生成备份 `~/.zshrc.omz-claude.bak`。  
+如果你的插件管理方式不同，请手动把 `claude` 加到插件列表里。
+
 ### 手动安装
 
 ```sh
@@ -61,6 +64,8 @@ claude --settings k<TAB>  # 补全到 ~/.claude/settings.kimi.json
 claude k<TAB>    # 展开为: claude --settings ~/.claude/settings.kimi.json
 claude oa<TAB>   # 展开为: claude --settings ~/.claude/settings.oaipro.json
 ```
+
+快捷配置和命令补全为“前缀匹配”，例如输入 `k<TAB>` 只会匹配以 `k` 开头的配置或命令。
 
 ## 配置文件规范
 

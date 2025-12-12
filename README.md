@@ -24,6 +24,9 @@ An oh-my-zsh plugin providing tab completion for the [Claude Code](https://code.
 curl -fsSL https://raw.githubusercontent.com/wakefun/omz-claude/main/install.sh | bash && source ~/.zshrc
 ```
 
+The installer will try to add `claude` to your `plugins=(...)` line in `~/.zshrc` and create a backup at `~/.zshrc.omz-claude.bak`.  
+If your plugins are managed differently, add `claude` manually.
+
 ### Manual Install
 
 ```sh
@@ -63,6 +66,8 @@ Type the config name directly without `--settings` to quickly switch between Cla
 claude k<TAB>    # Expands to: claude --settings ~/.claude/settings.kimi.json
 claude oa<TAB>   # Expands to: claude --settings ~/.claude/settings.oaipro.json
 ```
+
+Shortcut and command completion are prefix-based (e.g., typing `k<TAB>` only matches configs/commands starting with `k`).
 
 ## Settings File Convention
 
