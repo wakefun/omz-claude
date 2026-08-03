@@ -1,4 +1,5 @@
 #compdef claude
+# omz-ai-profile
 
 _claude() {
   setopt local_options extended_glob

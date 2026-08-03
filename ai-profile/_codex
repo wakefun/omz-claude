@@ -1,0 +1,62 @@
+#compdef codex
+# omz-ai-profile
+
+_codex_profile_uses_api_auth() {
+  grep -Eq \
+    '^[[:space:]]*(preferred_auth_method[[:space:]]*=[[:space:]]*"apikey"|forced_login_method[[:space:]]*=[[:space:]]*"api")[[:space:]]*(#.*)?$' \
+    "$1"
+}
+
+_codex() {
+  setopt local_options extended_glob
+  local codex_home="${CODEX_HOME:-$HOME/.codex}"
+  local f profile prefix needle warning_profile
+  local -a profile_names profile_descriptions profile_risks
+  local -i i match_count=0 risky_match_count=0 completion_status
+
+  for f in "$codex_home"/*.config.toml(N); do
+    profile=${f:t}
+    profile=${profile%.config.toml}
+    profile_names+=("$profile")
+
+    if _codex_profile_uses_api_auth "$f"; then
+      profile_descriptions+=("$profile -- WARNING: API auth may sign out ChatGPT")
+      profile_risks+=(1)
+    else
+      profile_descriptions+=("$profile")
+      profile_risks+=(0)
+    fi
+  done
+
+  (( $#profile_names )) || return 1
+
+  if [[ ${words[CURRENT-1]} == --profile || ${words[CURRENT-1]} == -p ]]; then
+    prefix=''
+  elif (( CURRENT == 2 )); then
+    prefix='--profile '
+  else
+    return 1
+  fi
+
+  needle=${words[CURRENT]}
+  for (( i = 1; i <= $#profile_names; i++ )); do
+    if [[ ${profile_names[i]:0:${#needle}} == "$needle" ]]; then
+      (( ++match_count ))
+      if (( profile_risks[i] )); then
+        (( ++risky_match_count ))
+        warning_profile=${profile_names[i]}
+      fi
+    fi
+  done
+
+  compadd -P "$prefix" -S ' ' -d profile_descriptions -a profile_names
+  completion_status=$?
+
+  if [[ -n $warning_profile ]] && (( match_count == 1 && risky_match_count == 1 )); then
+    zle -M "WARNING: '$warning_profile' selects API authentication and may sign out ChatGPT"
+  fi
+
+  return $completion_status
+}
+
+_codex "$@"
