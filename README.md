@@ -1,15 +1,15 @@
 # omz-claude
 
-An oh-my-zsh plugin providing tab completion for the [Claude Code](https://code.claude.com) CLI.
+An oh-my-zsh plugin for switching between [Claude Code](https://code.claude.com) settings files with Tab.
 
 ## [说明文档](README.cn.md)
 
 ## Features
 
-- Full tab completion for all `claude` CLI options and commands
-- Dynamic completion for `--settings` with `~/.claude/settings.*.json` files
-- Shortcut mode: type config name directly to expand to full `--settings` path
-- Cross-platform support (macOS, Linux)
+- Dynamically matches `~/.claude/settings.*.json` files
+- Expands a settings name to the full `--settings` argument
+- Detects new settings files without restarting the terminal
+- Supports macOS and Linux
 
 ## Requirements
 
@@ -24,7 +24,7 @@ An oh-my-zsh plugin providing tab completion for the [Claude Code](https://code.
 curl -fsSL https://raw.githubusercontent.com/wakefun/omz-claude/main/install.sh | bash && source ~/.zshrc
 ```
 
-The installer will try to add `claude` to your `plugins=(...)` line in `~/.zshrc` and create a backup at `~/.zshrc.omz-claude.bak`.  
+The installer will try to add `claude` to your `plugins=(...)` line in `~/.zshrc` and create a backup at `~/.zshrc.omz-claude.bak`.
 If your plugins are managed differently, add `claude` manually.
 
 ### Manual Install
@@ -36,75 +36,32 @@ cp -r omz-claude/claude ~/.oh-my-zsh/custom/plugins/
 
 ## Usage
 
-### Option Completion
-
-```sh
-claude --<TAB>          # List all available options
-claude --output-<TAB>   # Complete to --output-format
-```
-
-### Command Completion
-
-```sh
-claude <TAB>            # List all commands (mcp, plugin, doctor, etc.)
-claude m<TAB>           # Complete to 'mcp'
-claude up<TAB>          # Complete to 'update'
-```
-
-### Settings File Completion
-
-```sh
-claude --settings <TAB>   # List all settings files
-claude --settings k<TAB>  # Complete to ~/.claude/settings.kimi.json
-```
-
-### Shortcut Mode (Recommended)
-
-Type the config name directly without `--settings` to quickly switch between Claude configurations:
-
-```sh
-claude k<TAB>    # Expands to: claude --settings ~/.claude/settings.kimi.json
-claude oa<TAB>   # Expands to: claude --settings ~/.claude/settings.oaipro.json
-```
-
-Shortcut and command completion are prefix-based (e.g., typing `k<TAB>` only matches configs/commands starting with `k`).
-
-## Settings File Convention
-
-The plugin automatically scans `~/.claude/` for settings files matching this pattern:
+Settings files must follow this pattern:
 
 ```text
-Path: ~/.claude/settings.<config-name>.json
+~/.claude/settings.<name>.json
 ```
 
-Examples:
+Type a settings name and press Tab:
 
-| Filename | Config Name | Shortcut |
-|----------|-------------|----------|
-| `settings.kimi.json` | kimi | `claude k<TAB>` |
-| `settings.oaipro.json` | oaipro | `claude oa<TAB>` |
-| `settings.deepseek.json` | deepseek | `claude d<TAB>` |
+```sh
+claude k<TAB>    # claude --settings ~/.claude/settings.kimi.json
+claude oa<TAB>   # claude --settings ~/.claude/settings.oaipro.json
+```
 
-New configurations are detected automatically without restarting the terminal.
+The same matching works after `--settings`:
+
+```sh
+claude --settings k<TAB>  # claude --settings ~/.claude/settings.kimi.json
+```
 
 ## File Structure
 
-```
+```text
 claude/
-├── _claude            # Completion script
+├── _claude            # Settings matcher
 └── claude.plugin.zsh  # Plugin entry point
 ```
-
-## Supported Commands
-
-| Command | Description |
-|---------|-------------|
-| `mcp` | Configure and manage MCP servers |
-| `plugin` | Manage Claude Code plugins |
-| `setup-token` | Set up authentication token |
-| `doctor` | Check auto-updater health |
-| `update` | Check for updates |
-| `install` | Install Claude Code native build |
 
 ## License
 
